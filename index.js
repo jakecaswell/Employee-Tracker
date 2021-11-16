@@ -40,30 +40,49 @@ const startApp = () => {
 // THESE FUNCTIONS ARE THE ACTUAL FUNCTIONS FOR THE SELECTION YOU CHOOSE IN THE BEGINNING PROMPT
 
 const viewDepartments = () => {
-    console.log('You chose to view the departments!');
-    // startApp();
+    console.log('\nYou chose to view the departments!\n');
+    const sql = `Select * From employeedb.department`;
+    connection.query(sql, (err, res) => {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        console.table(res);
+        startApp();
+    });
+
 }
 
 const viewRoles = () => {
-    console.log('You chose to view all the roles!');
+    console.log('\nYou chose to view all the roles!\n');
+    const sql = `SELECT roles.id, roles.title, roles.salary, department.department_name As Department From roles
+                 Left Join department On roles.department_id = department.id`;
+    connection.query(sql, (err, res) => {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        console.table(res);
+        startApp();
+    })
 }
 
 const viewEmployees = () => {
-    console.log('You chose to view all the employees!');
+    console.log('\nYou chose to view all the employees!\n');
 }
 
 const addDepartment = () => {
-    console.log('You chose to add a department!');
+    console.log('\nYou chose to add a department!\n');
 }
 
 const addRole = () => {
-    console.log('You chose to add another role!');
+    console.log('\nYou chose to add another role!\n');
 }
 
 const addEmployee = () => {
-    console.log('You chose to add a new employee!');
+    console.log('\nYou chose to add a new employee!\n');
 }
 
 const updateRole = () => {
-    console.log("You chose to update an employee's role!");
+    console.log("\nYou chose to update an employee's role!\n");
 }
