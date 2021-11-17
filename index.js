@@ -44,8 +44,7 @@ const viewDepartments = () => {
     const sql = `Select * From employeedb.department`;
     connection.query(sql, (err, res) => {
         if (err) {
-            console.log(err);
-            return;
+            throw err
         }
         console.table(res);
         startApp();
@@ -59,8 +58,7 @@ const viewRoles = () => {
                  Left Join department On roles.department_id = department.id`;
     connection.query(sql, (err, res) => {
         if (err) {
-            console.log(err);
-            return;
+            throw err
         }
         console.table(res);
         startApp();
@@ -69,10 +67,38 @@ const viewRoles = () => {
 
 const viewEmployees = () => {
     console.log('\nYou chose to view all the employees!\n');
+    const sql = `SELECT employee.first_name, employee.last_name, roles.title As title, roles.salary As salary, department_name As department, employee.manager_id As manager 
+                 FROM employeedb.employee
+                 Left Join roles On employee.role_id = roles.id
+                 Left Join department On roles.department_id = department.id`;
+    connection.query(sql, (err, res) => {
+        if (err) {
+            throw err;
+        }
+        console.table(res);
+        startApp();
+    })
 }
 
 const addDepartment = () => {
     console.log('\nYou chose to add a department!\n');
+    inquirer.prompt([
+        {
+            name: 'name',
+            type: 'input',
+            message: 'What is the name of the department you would like to add?'
+        }
+    ]).then(res => {
+        const sql = `Insert Into department (department_name)
+                     Values (?)`;
+        connection.query(sql, res.name,
+            function(err) {
+                if (err) throw err
+                viewDepartments();
+                startApp();
+            }
+        )
+    })
 }
 
 const addRole = () => {
